@@ -1,4 +1,5 @@
-server
-client
+#server
+#client
 *.exe
 history.json
+

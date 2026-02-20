@@ -39,11 +39,21 @@ func main() {
 	color.Green("✅ Подключено к %s", address)
 	color.Cyan("📝 Команды: /users, /join комната [пароль], /create комната [пароль], /rooms, /msg ник текст, /reply ник текст, /help, /quit")
 
+	reader := bufio.NewReader(conn)
+
+	// Ждём первое сообщение от сервера (без таймаута)
+	msg, err := reader.ReadString('\n')
+	if err != nil {
+		color.Red("Ошибка приветствия: %v", err)
+		return
+	}
+	fmt.Print(msg)
+
 	done := make(chan bool)
 
+	// Чтение остальных сообщений
 	// Чтение от сервера
 	go func() {
-		reader := bufio.NewReader(conn)
 		for {
 			msg, err := reader.ReadString('\n')
 			if err != nil {
@@ -52,28 +62,20 @@ func main() {
 				return
 			}
 			fmt.Print(msg)
+			fmt.Print("")
 		}
 	}()
 
 	// Чтение ввода пользователя
 	go func() {
 		stdinReader := bufio.NewReader(os.Stdin)
-
 		for {
 			text, _ := stdinReader.ReadString('\n')
 			text = strings.TrimSpace(text)
-
 			if text == "" {
 				continue
 			}
-
-			// ← ИСПРАВЛЕНО: добавляем "_," чтобы принять два возвращаемых значения
-			_, err := conn.Write([]byte(text + "\n"))
-			if err != nil {
-				done <- true
-				return
-			}
-
+			conn.Write([]byte(text + "\n"))
 			if text == "/quit" {
 				done <- true
 				return
@@ -83,9 +85,7 @@ func main() {
 
 	<-done
 
-	// Небольшая задержка чтобы последние сообщения ушли
 	time.Sleep(100 * time.Millisecond)
-
 	clearScreen()
 	color.Yellow("👋 Чат завершен")
 	time.Sleep(1 * time.Second)
