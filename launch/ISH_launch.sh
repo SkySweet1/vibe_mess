@@ -2,7 +2,7 @@
 
 # launch.sh - Полная установка и запуск мессенджера для iSH
 
-echo "📱 Запуск установки мессенджера для iSH"
+echo "Запуск установки мессенджера для iSH"
 
 # 1. Обновление пакетов
 echo "Обновление пакетов..."
@@ -15,7 +15,7 @@ else
 fi
 
 # 2. Проверка/установка Go
-echo "🔧 Проверка Go..."
+echo "Проверка Go..."
 if ! command -v go &> /dev/null; then
     echo "Установка Go..."
     apk add go > /dev/null 2>&1
@@ -30,7 +30,7 @@ else
 fi
 
 # 3. Проверка/установка Git
-echo "🔧 Проверка Git..."
+echo "Проверка Git..."
 if ! command -v git &> /dev/null; then
     echo "Установка Git..."
     apk add git > /dev/null 2>&1
@@ -55,16 +55,16 @@ if [ ! -d "vibe_mess" ]; then
         exit 1
     fi
 else
-    echo "✅ Репозиторий уже существует"
-    echo "🔄 Обновление репозитория..."
+    echo "Репозиторий уже существует"
+    echo "Обновление репозитория..."
     cd vibe_mess && git pull && cd ..
 fi
 
 # 5. Переход в папку клиента
-cd vibe_mess/client || { echo "❌ Папка client не найдена"; exit 1; }
+cd vibe_mess/client || { echo "Папка client не найдена"; exit 1; }
 
 # 6. Сборка клиента
-echo "🔨 Сборка клиента..."
+echo "Сборка клиента..."
 go build -o messenger client.go
 if [ $? -eq 0 ]; then
     echo "Клиент собран: $(ls -la messenger | awk '{print $5}') байт"
