@@ -21,7 +21,7 @@ fi
 
 # 4. Сборка клиента
 cd vibe_mess/client
-echo "🔨 Сборка клиента..."
+echo "Сборка клиента..."
 go build -o messenger client.go
 
 echo ""
